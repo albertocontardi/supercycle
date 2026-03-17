@@ -1,6 +1,6 @@
 ---
 name: using-supercycle
-description: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions. Also reminds to run /retrospective quick at end of session.
+description: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions. Runs FULL retrospective (6 phases) automatically at end of session.
 ---
 
 <SUBAGENT-STOP>
@@ -23,13 +23,13 @@ SuperCycle is a complete workflow that covers the full lifecycle of a developmen
 SESSION START                        SESSION END
      │                                    │
      ▼                                    ▼
-Predictive Shield scans          /retrospective quick
-task against history               records patterns,
-     │                             updates pattern index,
-     ▼                             improves skill system
-Use skills for every task            for next session
-(brainstorm → plan → implement
-→ test → review → ship)
+Predictive Shield scans          FULL retrospective (6 phases)
+task against history               1. Data collection
+     │                             2. Pattern analysis + indexes
+     ▼                             3. Skill analysis + health scores
+Use skills for every task          4. Gap analysis
+(brainstorm → plan → implement     5. Action plan (wait for confirm)
+→ test → review → ship)           6. Execute approved actions
      │                                    │
      └──────────── next session ──────────┘
               starts stronger AND
@@ -194,12 +194,53 @@ The user can change this anytime by editing the file or saying "enable/disable c
 
 # End of Session
 
-When the session is ending — the user says "ok for today", "we're done", "see you tomorrow", "that's all", or the conversation is clearly wrapping up — **automatically run the quick retrospective**. Do not ask. Do not remind. Just do it.
+When the session is ending — the user says "basta per oggi", "ok per oggi", "abbiamo finito", "we're done", "see you tomorrow", "that's all", or the conversation is clearly wrapping up — **automatically run the FULL retrospective** (all 6 phases). Do not ask permission to start. Just do it.
 
-1. Review the session: tasks, errors, skills used, gaps, successful workflows
-2. Collect metrics
-3. Save the note file
-4. Show the 5-line summary
-5. Then say goodbye
+## Full Retrospective at Session End
 
-The quick retrospective only writes `.md` files — no side effects, no skill modifications. It is safe to run automatically. Do not skip this. It closes the SuperCycle loop.
+Execute the complete 6-phase retrospective cycle from `retrospective/SKILL.md`:
+
+### Phase 0 — Data Collection
+- Read quick audit notes from `.claude/reports/skill_audit_notes/`
+- Read changelog from `.claude/reports/SKILL_CHANGELOG.md`
+- Scan for recurring errors, repeated instructions, workarounds
+
+### Phase 1 — Pattern Analysis
+- Extract error patterns and repeated instructions
+- **Update Pattern Index** (`.claude/reports/PATTERN_INDEX.md`) — add new patterns with `source: session`, confirm bootstrap patterns, increment occurrences
+- **Update Playbook Index** (`.claude/reports/PLAYBOOK_INDEX.md`) — record successful workflows, update success rates
+- **Community sharing** — send patterns if opted in, receive community patterns always
+
+### Phase 2 — Skill Analysis
+- Discover all skills in `.claude/skills/`
+- Classify each: ACTIVE / REACTIVATE / DORMANT / CANDIDATE-REMOVAL
+- Compute health scores (0-100) for each skill
+- Check dependency chains for breaks
+
+### Phase 3 — Gap Analysis
+- For each unresolved pattern, identify missing skills
+- Prioritize: HIGH (3+ occurrences, broken chains) / MEDIUM / LOW
+
+### Phase 4 — Action Plan
+Present the complete plan to the user:
+- Skills to REACTIVATE (update descriptions)
+- Skills to CREATE (fill gaps)
+- Skills to MODIFY (surgical patches)
+- Skills CANDIDATE FOR REMOVAL (propose archival)
+
+**WAIT for explicit user confirmation before proceeding to Phase 5.**
+
+### Phase 5 — Execution
+Execute ONLY the actions the user approved:
+- Reactivate dormant skills (update descriptions)
+- Create new skills
+- Modify existing skills (surgical patches only)
+- Archive confirmed removals to `_archived/`
+
+### Phase 6 — Changelog & Report
+- Append all changes to `.claude/reports/SKILL_CHANGELOG.md`
+- Generate full report in `.claude/reports/SKILL_AUDIT_[date].md`
+- Append metrics to `.claude/reports/METRICS_HISTORY.md`
+- Show summary and say goodbye
+
+This is the most important part of the SuperCycle. It evolves the skill system based on real experience. Do not skip this. Do not downgrade to quick mode.

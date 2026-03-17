@@ -125,6 +125,26 @@ The retrospective checks all chains during the full audit. If any skill in a cha
 
 **Design principle:** a skill in a chain should fail gracefully if its upstream skill wasn't invoked. Don't hard-depend — reference the expected input but provide fallback instructions for when the user skips directly to your skill.
 
+## Playbook Index integration
+
+Skills participate in workflows that get tracked by the Playbook Index (`.claude/reports/PLAYBOOK_INDEX.md`). When writing a skill, consider how it fits into successful workflows:
+
+**Declare your workflow position.** In your `## Chain position` section, specify not just upstream/downstream skills but also the typical workflow sequences your skill participates in. This helps the retrospective build accurate playbooks.
+
+```markdown
+## Chain position
+
+**Upstream:** brainstorming (receives approved design)
+**Downstream:** executing-plans (receives implementation plan)
+**Typical workflows:** brainstorm → plan → execute, debug → plan → execute
+```
+
+**Record successful completions.** If your skill completes a meaningful unit of work, the retrospective's quick mode captures it in "Successful workflows". Design your skill to have a clear completion signal so the workflow can be logged accurately.
+
+**Support adaptive workflows.** The Predictive Shield (Level 5) may propose skipping or adding steps based on playbook data. Your skill should work both as part of the full workflow and when invoked directly (e.g., skipping brainstorming for a proven playbook). Don't hard-require that upstream skills ran first — provide fallback instructions.
+
+**Task type keywords.** Playbooks match by `task_type` keywords. When writing your skill's description, include the same keywords that would appear in a playbook's `task_type` field, so the Shield can connect tasks to playbooks via your skill.
+
 ## Testing your skill
 
 Before adding a skill to SuperCycle:

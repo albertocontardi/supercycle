@@ -1,6 +1,6 @@
 ---
 name: supercycle
-description: Development lifecycle framework — loads at every session start. Activates Predictive Shield, skill enforcement, and auto-retrospective at session end. Entry point for all SuperCycle sub-skills.
+description: Development lifecycle framework — loads at every session start. Activates Predictive Shield, skill enforcement, and FULL retrospective (6 phases) at session end. Entry point for all SuperCycle sub-skills.
 ---
 
 <SUBAGENT-STOP>
@@ -17,12 +17,12 @@ This is the root entry point. It loads automatically at every session start.
 SESSION START                        SESSION END
      │                                    │
      ▼                                    ▼
-Predictive Shield scans          Auto-retrospective
-task against history               records patterns,
-     │                             updates pattern index
-     ▼
-Use skills for every task
-(brainstorm → plan → implement
+Predictive Shield scans          FULL retrospective (6 phases)
+task against history               pattern + playbook indexes,
+     │                             skill health scores,
+     ▼                             gap analysis, action plan
+Use skills for every task          (wait for user confirm),
+(brainstorm → plan → implement     execute approved actions
 → test → review → ship)
      │                                    │
      └──────────── next session ──────────┘
@@ -64,9 +64,12 @@ Use skills for every task
 
 ### Session End
 
-When the session is ending — user says "ok for today", "we're done", "that's all" — **automatically run the quick retrospective**. Do not ask. Just do it.
+When the session is ending — user says "basta per oggi", "ok per oggi", "abbiamo finito", "we're done", "that's all" — **automatically run the FULL retrospective** (all 6 phases). Do not ask. Just do it.
 
-1. Review session: tasks, errors, skills used, gaps
-2. Save note to `.claude/reports/skill_audit_notes/`
-3. Show 5-line summary
-4. Say goodbye
+1. Phase 0: Data collection (quick notes, changelog, memory)
+2. Phase 1: Pattern analysis + update Pattern Index + update Playbook Index + community sharing
+3. Phase 2: Skill analysis with health scores + dependency chain check
+4. Phase 3: Gap analysis
+5. Phase 4: Action plan — **present to user and WAIT for confirmation**
+6. Phase 5: Execute approved actions (create/modify/reactivate/archive skills)
+7. Phase 6: Changelog update + full report + say goodbye
