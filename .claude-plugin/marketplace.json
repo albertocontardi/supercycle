@@ -1,0 +1,20 @@
+{
+  "name": "supercycle-marketplace",
+  "description": "SuperCycle marketplace — complete development lifecycle with retrospective",
+  "owner": {
+    "name": "Alberto Contardi",
+    "email": ""
+  },
+  "plugins": [
+    {
+      "name": "supercycle",
+      "description": "Complete development lifecycle: structured workflows (brainstorm → plan → implement → test → review) plus end-of-session retrospective that evolves your skill system over time",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "Alberto Contardi",
+        "email": ""
+      }
+    }
+  ]
+}

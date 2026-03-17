@@ -1,0 +1,16 @@
+{
+  "name": "supercycle",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Complete development lifecycle for AI coding agents: structured workflows plus end-of-session retrospective that evolves your skill system over time",
+  "author": {
+    "name": "Alberto Contardi"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/albertocontardi/supercycle",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/albertocontardi/supercycle.git"
+  },
+  "keywords": ["skills", "claude-code", "tdd", "debugging", "retrospective", "workflows", "lifecycle", "superpowers"]
+}

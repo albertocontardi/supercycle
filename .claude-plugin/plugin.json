@@ -1,0 +1,13 @@
+{
+  "name": "supercycle",
+  "description": "Complete development lifecycle for Claude Code: structured workflows (brainstorm → plan → implement → test → review) plus end-of-session retrospective that evolves your skill system over time",
+  "version": "1.0.0",
+  "author": {
+    "name": "Alberto Contardi",
+    "email": ""
+  },
+  "homepage": "https://github.com/albertocontardi/supercycle",
+  "repository": "https://github.com/albertocontardi/supercycle",
+  "license": "MIT",
+  "keywords": ["skills", "tdd", "debugging", "retrospective", "workflows", "lifecycle"]
+}

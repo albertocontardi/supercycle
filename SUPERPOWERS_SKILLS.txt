@@ -1,0 +1,16 @@
+# Superpowers skills included in SuperCycle
+# One skill directory name per line
+# Used by sync-superpowers.sh to detect additions and removals
+brainstorming
+dispatching-parallel-agents
+executing-plans
+finishing-a-development-branch
+receiving-code-review
+requesting-code-review
+subagent-driven-development
+systematic-debugging
+test-driven-development
+using-git-worktrees
+verification-before-completion
+writing-plans
+writing-skills

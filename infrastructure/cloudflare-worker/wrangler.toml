@@ -1,0 +1,9 @@
+name = "supercycle-patterns"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+GITHUB_REPO = "albertocontardi/supercycle"
+GITHUB_BRANCH = "main"
+
+# GITHUB_TOKEN goes in secrets: wrangler secret put GITHUB_TOKEN

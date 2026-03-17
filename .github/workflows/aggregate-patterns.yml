@@ -1,0 +1,107 @@
+name: Aggregate Community Patterns
+
+on:
+  push:
+    paths:
+      - 'community-patterns/inbox/**'
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Aggregate patterns
+        run: |
+          set -euo pipefail
+
+          INBOX_DIR="community-patterns/inbox"
+          AGG_DIR="community-patterns/aggregated"
+
+          # Find all stacks with inbox files
+          STACKS=$(find "$INBOX_DIR" -name "*.json" -not -name ".gitkeep" | xargs -I{} dirname {} | sort -u | xargs -I{} basename {})
+
+          if [ -z "$STACKS" ]; then
+            echo "No inbox files to process"
+            exit 0
+          fi
+
+          for stack in $STACKS; do
+            echo "Processing stack: $stack"
+            AGG_FILE="$AGG_DIR/${stack}.json"
+
+            # Initialize aggregated file if missing
+            if [ ! -f "$AGG_FILE" ]; then
+              echo '{"stack":"'"$stack"'","updated_at":"","pattern_count":0,"patterns":[]}' > "$AGG_FILE"
+            fi
+
+            # Process each inbox file
+            for inbox_file in "$INBOX_DIR/$stack"/*.json; do
+              [ -f "$inbox_file" ] || continue
+              echo "  Processing: $inbox_file"
+
+              # Extract user_hash and patterns from inbox file
+              USER_HASH=$(jq -r '.user_hash' "$inbox_file")
+              PATTERN_COUNT=$(jq '.patterns | length' "$inbox_file")
+
+              for i in $(seq 0 $((PATTERN_COUNT - 1))); do
+                PATTERN_ID=$(jq -r ".patterns[$i].id" "$inbox_file")
+
+                # Check if pattern already exists in aggregated
+                EXISTS=$(jq --arg id "$PATTERN_ID" '[.patterns[] | select(.id == $id)] | length' "$AGG_FILE")
+
+                if [ "$EXISTS" -gt 0 ]; then
+                  # Update existing: increment reporters (deduplicate by user_hash)
+                  ALREADY_REPORTED=$(jq --arg id "$PATTERN_ID" --arg hash "$USER_HASH" \
+                    '[.patterns[] | select(.id == $id) | ._reporter_hashes[] | select(. == $hash)] | length' "$AGG_FILE" 2>/dev/null || echo "0")
+
+                  if [ "$ALREADY_REPORTED" -eq 0 ]; then
+                    # New reporter for existing pattern
+                    jq --arg id "$PATTERN_ID" --arg hash "$USER_HASH" --arg date "$(date -u +%Y-%m-%d)" \
+                      '(.patterns[] | select(.id == $id)) |= (
+                        .reporters += 1 |
+                        .last_seen = $date |
+                        ._reporter_hashes += [$hash]
+                      )' "$AGG_FILE" > "${AGG_FILE}.tmp" && mv "${AGG_FILE}.tmp" "$AGG_FILE"
+                  fi
+                else
+                  # New pattern
+                  jq --argjson pattern "$(jq ".patterns[$i]" "$inbox_file")" \
+                     --arg hash "$USER_HASH" --arg date "$(date -u +%Y-%m-%d)" \
+                    '.patterns += [$pattern + {
+                      "reporters": 1,
+                      "first_seen": $date,
+                      "last_seen": $date,
+                      "_reporter_hashes": [$hash]
+                    }]' "$AGG_FILE" > "${AGG_FILE}.tmp" && mv "${AGG_FILE}.tmp" "$AGG_FILE"
+                fi
+              done
+
+              # Remove processed inbox file
+              rm "$inbox_file"
+            done
+
+            # Update metadata
+            jq --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              '.updated_at = $date | .pattern_count = (.patterns | length)' "$AGG_FILE" > "${AGG_FILE}.tmp" && mv "${AGG_FILE}.tmp" "$AGG_FILE"
+
+            echo "  Stack $stack: $(jq '.pattern_count' "$AGG_FILE") patterns total"
+          done
+
+          # Clean empty inbox directories
+          find "$INBOX_DIR" -type d -empty -not -path "$INBOX_DIR" -delete 2>/dev/null || true
+
+      - name: Commit aggregated patterns
+        run: |
+          git config user.name "SuperCycle Bot"
+          git config user.email "supercycle-bot@users.noreply.github.com"
+          git add community-patterns/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: aggregate community patterns"
+            git push
+          fi
