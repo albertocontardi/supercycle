@@ -1,7 +1,7 @@
 {
   "stack": "javascript",
-  "updated_at": "2026-03-17T19:07:20Z",
-  "pattern_count": 1,
+  "updated_at": "2026-03-17T19:18:05Z",
+  "pattern_count": 4,
   "patterns": [
     {
       "id": "test-pattern-1",
@@ -16,6 +16,60 @@
       "last_seen": "2026-03-17",
       "_reporter_hashes": [
         "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+      ]
+    },
+    {
+      "id": "glob-timeout-home-dir",
+      "triggers": [
+        "glob",
+        "search",
+        "home",
+        "timeout"
+      ],
+      "error": "Glob tool times out after 60s when searching recursively under home directory",
+      "resolution": "Use ls via Bash or specify a more specific subdirectory",
+      "severity": "medium",
+      "reporters": 1,
+      "first_seen": "2026-03-17",
+      "last_seen": "2026-03-17",
+      "_reporter_hashes": [
+        "6f3d93f400a57c4528c5558ee0b1ace3b8bbf4a2040018a9789e9b97ae25be02"
+      ]
+    },
+    {
+      "id": "npm-global-eacces",
+      "triggers": [
+        "npm",
+        "install",
+        "global",
+        "permission"
+      ],
+      "error": "npm install -g fails with EACCES permission denied on WSL",
+      "resolution": "Install locally in project directory and use npx to run",
+      "severity": "low",
+      "reporters": 1,
+      "first_seen": "2026-03-17",
+      "last_seen": "2026-03-17",
+      "_reporter_hashes": [
+        "6f3d93f400a57c4528c5558ee0b1ace3b8bbf4a2040018a9789e9b97ae25be02"
+      ]
+    },
+    {
+      "id": "wrangler-login-port-conflict",
+      "triggers": [
+        "wrangler",
+        "login",
+        "port",
+        "EADDRINUSE"
+      ],
+      "error": "wrangler login fails because previous attempt left process on port 8976",
+      "resolution": "Kill the process on the port then retry login",
+      "severity": "low",
+      "reporters": 1,
+      "first_seen": "2026-03-17",
+      "last_seen": "2026-03-17",
+      "_reporter_hashes": [
+        "6f3d93f400a57c4528c5558ee0b1ace3b8bbf4a2040018a9789e9b97ae25be02"
       ]
     }
   ]
