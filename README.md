@@ -39,8 +39,9 @@ Superpowers forces discipline during a session. Retrospective maintains the syst
 git clone https://github.com/albertocontardi/supercycle.git /tmp/supercycle
 
 # Claude Code
-mkdir -p ~/.claude/skills
+mkdir -p ~/.claude/skills ~/.claude/commands
 cp -r /tmp/supercycle/skills/* ~/.claude/skills/
+cp -r /tmp/supercycle/commands/* ~/.claude/commands/
 
 # Codex
 mkdir -p ~/.agents/skills
