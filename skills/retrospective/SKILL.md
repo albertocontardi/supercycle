@@ -218,11 +218,11 @@ See `skills/predictive-shield/SKILL.md` for the full Playbook Index format.
 **Send** (only if `.claude/supercycle-config.json` has `community_sharing: true`):
 1. Collect all patterns from Pattern Index with `source: session` or `source: confirmed` (NOT `source: bootstrap`)
 2. Anonymize: strip any field that could contain project-specific info
-3. POST to `https://supercycle-patterns.albertocontardi.workers.dev/patterns` with stack tag and user_hash
+3. POST to `https://supercycle-patterns.contardi227.workers.dev/patterns` with stack tag and user_hash
 4. Log in report: "Shared [N] patterns with community"
 
 **Receive** (ALWAYS, regardless of opt-in):
-1. GET from `https://supercycle-patterns.albertocontardi.workers.dev/patterns/[stack]`
+1. GET from `https://supercycle-patterns.contardi227.workers.dev/patterns/[stack]`
 2. Save to `.claude/reports/COMMUNITY_PATTERNS.md` (local cache)
 3. The Predictive Shield uses this cache at next session start (Level 6)
 

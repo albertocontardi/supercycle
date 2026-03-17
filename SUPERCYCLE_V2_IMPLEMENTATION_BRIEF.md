@@ -595,7 +595,7 @@ Dopo aver completato TUTTO, esegui questa checklist:
 
 - [ ] Nessun `YOUR_USERNAME` o `YOUR_GITHUB_USERNAME` residuo
 - [ ] Nessun `TODO` o `FIXME` nei file
-- [ ] L'URL del worker (`supercycle-patterns.albertocontardi.workers.dev`) è coerente ovunque
+- [ ] L'URL del worker (`supercycle-patterns.contardi227.workers.dev`) è coerente ovunque
 
 ### Test
 
